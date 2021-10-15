@@ -19,9 +19,21 @@ class CTCCharTextEncoder(CharTextEncoder):
 
     def ctc_decode(self, inds: List[int]) -> str:
         # TODO: your code here
-        raise NotImplementedError()
+        # seminar
+        res = []
+        last_blank = False
+        for ind in inds:
+            ind = ind.item() if torch.is_tensor(ind) else ind
+            if ind == self.char2ind[self.EMPTY_TOK]:
+                last_blank = True
+            else:
+                if len(res) == 0 or last_blank or res[-1] != ind:
+                    res.append(ind)
+                last_blank = False
+        return ''.join([self.ind2char[c] for c in res])
 
-    def ctc_beam_search(self, probs: torch.tensor, beam_size: int = 100) -> List[Tuple[str, float]]:
+    def ctc_beam_search(self, probs: torch.tensor, probs_length,
+                        beam_size: int = 100) -> List[Tuple[str, float]]:
         """
         Performs beam search and returns a list of pairs (hypothesis, hypothesis probability).
         """
