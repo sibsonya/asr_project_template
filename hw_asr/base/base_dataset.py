@@ -12,6 +12,7 @@ from hw_asr.utils.parse_config import ConfigParser
 
 logger = logging.getLogger(__name__)
 
+import string
 
 class BaseDataset(Dataset):
     def __init__(
@@ -57,11 +58,12 @@ class BaseDataset(Dataset):
         audio_path = data_dict["path"]
         audio_wave = self.load_audio(audio_path)
         audio_wave, audio_spec = self.process_wave(audio_wave)
+        text = self.process_text(data_dict['text'])
         return {
             "audio": audio_wave,
             "spectrogram": audio_spec,
             "duration": data_dict["audio_len"],
-            "text": data_dict["text"],
+            "text": text,
             "text_encoded": self.text_encoder.encode(data_dict["text"]),
             "audio_path": audio_path,
         }
@@ -93,6 +95,9 @@ class BaseDataset(Dataset):
             if self.spec_augs is not None:
                 audio_tensor_spec = self.spec_augs(audio_tensor_spec)
             return audio_tensor_wave, audio_tensor_spec
+
+    def process_text(self, text : str):
+        return text.translate(str.maketrans('', '', string.punctuation))
 
     @staticmethod
     def _filter_records_from_dataset(
