@@ -12,6 +12,8 @@ from hw_asr.utils.parse_config import ConfigParser
 
 logger = logging.getLogger(__name__)
 
+import string
+
 class BaseDataset(Dataset):
     def __init__(
         self,
