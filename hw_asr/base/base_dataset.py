@@ -12,8 +12,6 @@ from hw_asr.utils.parse_config import ConfigParser
 
 logger = logging.getLogger(__name__)
 
-import string
-
 class BaseDataset(Dataset):
     def __init__(
         self,
@@ -63,7 +61,7 @@ class BaseDataset(Dataset):
             "audio": audio_wave,
             "spectrogram": audio_spec,
             "duration": data_dict["audio_len"],
-            "text": text,
+            "text": data_dict['text'],
             "text_encoded": self.text_encoder.encode(data_dict["text"]),
             "audio_path": audio_path,
         }
