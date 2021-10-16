@@ -16,14 +16,13 @@
     "arch": {
       "type": "GRUModel",
       "args": {
-        "n_feats": 128,
-        "fc_hidden": 512
+        "n_feats": 128
       }
     },
     "data": {
       "train": {
         "batch_size": 20,
-        "num_workers": 0,
+        "num_workers": 2,
         "datasets": [
           {
             "type": "LibrispeechDataset",
@@ -38,7 +37,7 @@
       },
       "val": {
         "batch_size": 20,
-        "num_workers": 5,
+        "num_workers": 2,
         "datasets": [
           {
             "type": "LibrispeechDataset",
@@ -55,7 +54,7 @@
     "optimizer": {
       "type": "Adam",
       "args": {
-        "lr": 2e-3
+        "lr": 4e-3
       }
     },
     "loss": {
@@ -77,25 +76,21 @@
       }
     ],
     "lr_scheduler": {
-      "type": "OneCycleLR",
+      "type": "CosineAnnealingLR",
       "args": {
-        "steps_per_epoch": 100,
-        "epochs": 50,
-        "anneal_strategy": "cos",
-        "max_lr": 2e-3,
-        "pct_start": 0.2
+        "T_max" : 3000,
+        "eta_min" : 1e-5
       }
     },
     "trainer": {
-      "epochs": 30,
+      "epochs": 100,
       "save_dir": "saved/",
-      "save_period": 5,
+      "save_period": 100,
       "verbosity": 2,
       "monitor": "min val_loss",
-      "early_stop": 100,
       "visualize": "wandb",
       "wandb_project": "asr_project",
-      "len_epoch": 10,
+      "len_epoch": 1,
       "grad_norm_clip": 10
     }
   }
